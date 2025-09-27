@@ -1,7 +1,7 @@
 import tweepy 
 import os
 import ephem
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # 環境変数から認証情報を取得（クラウド環境用）
 API_KEY = os.getenv("TWITTER_API_KEY")
@@ -65,8 +65,7 @@ def get_sun_times():
         tokyo.elevation = 0
         
         # 日本時間で今日の日付を取得
-        from datetime import timedelta
-        japan_now = datetime.utcnow() + timedelta(hours=9)
+        japan_now = datetime.now(timezone.utc) + timedelta(hours=9)
         tokyo.date = japan_now.strftime('%Y/%m/%d 00:00:00')
         
         # 太陽オブジェクト
@@ -90,8 +89,7 @@ def get_sun_times():
 # 日本時間を取得する関数
 def get_japan_time():
     """日本時間（UTC+9）を取得する"""
-    from datetime import timedelta
-    utc_now = datetime.utcnow()
+    utc_now = datetime.now(timezone.utc)
     japan_time = utc_now + timedelta(hours=9)
     return japan_time
 
