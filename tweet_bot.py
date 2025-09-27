@@ -1,10 +1,14 @@
 import tweepy 
 import os
-from dotenv import load_dotenv
 from datetime import datetime
 
-# .envファイルを読み込み
-load_dotenv()
+# ローカル開発用の.envファイル読み込み（クラウドでは無視される）
+try:
+    from dotenv import load_dotenv
+    load_dotenv()  # .envファイルがあれば読み込む
+except ImportError:
+    # python-dotenvがインストールされていない場合はスキップ
+    pass
 
 # 環境変数から認証情報を取得
 API_KEY = os.getenv("TWITTER_API_KEY")
