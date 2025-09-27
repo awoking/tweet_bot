@@ -64,21 +64,29 @@ def get_sun_times():
         tokyo.lon = '139.6503' # 東京の経度
         tokyo.elevation = 0
         
-        # 今日の日付
-        tokyo.date = datetime.now()
+        # 今日の日付を設定
+        now = datetime.now()
+        tokyo.date = now.strftime('%Y/%m/%d 00:00:00')
         
         # 太陽オブジェクト
         sun = ephem.Sun()
         
-        # 日の出・日没計算
-        sunrise = tokyo.next_rising(sun)
-        sunset = tokyo.next_setting(sun)
+        # 今日の日の出・日没を計算
+        sunrise_utc = tokyo.next_rising(sun)
+        sunset_utc = tokyo.next_setting(sun)
         
-        # 日本時間に変換（UTC+9）
-        sunrise_jst = ephem.localtime(sunrise)
-        sunset_jst = ephem.localtime(sunset)
+        # UTC+9（日本時間）に変換
+        from datetime import timedelta
+        
+        sunrise_jst = sunrise_utc.datetime() + timedelta(hours=9)
+        sunset_jst = sunset_utc.datetime() + timedelta(hours=9)
         
         return sunrise_jst.strftime("%H:%M"), sunset_jst.strftime("%H:%M")
+    
+    except Exception as e:
+        print(f"⚠️ 日の出・日没計算エラー: {e}")
+        # 9月末の東京の大体の時刻
+        return "05:50", "17:30"
     
     except Exception as e:
         print(f"⚠️ 日の出・日没計算エラー: {e}")
