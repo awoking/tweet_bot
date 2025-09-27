@@ -86,10 +86,6 @@ def get_sun_times():
         print(f"⚠️ 日の出・日没計算エラー: {e}")
         # 9月末の東京の大体の時刻
         return "05:50", "17:30"
-    
-    except Exception as e:
-        print(f"⚠️ 日の出・日没計算エラー: {e}")
-        return "06:30", "18:00"  # デフォルト値
 
 # 日本時間を取得する関数
 def get_japan_time():
@@ -102,13 +98,11 @@ def get_japan_time():
 # 日の出・日没時刻を取得
 sunrise_time, sunset_time = get_sun_times()
 
-# 日本時間でシェルログ風ツイートメッセージを作成
+# 日本時間でツイートメッセージを作成
 japan_now = get_japan_time()
 date_str = japan_now.strftime("%Y-%m-%d")
-time_str = japan_now.strftime("%H:%M:%S")
-day_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][japan_now.weekday()]
 
-# シェルプロンプト風のメッセージ
+# ツイートメッセージ
 tweet_text = f"""$ {date_str} JST
 Sunrise : {sunrise_time}
 ┌─────────────────┐
