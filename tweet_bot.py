@@ -26,9 +26,18 @@ print("✅ 環境変数設定OK - Twitter Bot起動中...")
 print("🔍 認証情報チェック:")
 print(f"API_KEY: {API_KEY[:8]}..." if API_KEY and len(API_KEY) > 8 else f"API_KEY: {API_KEY}")
 print(f"API_SECRET: {API_SECRET[:8]}..." if API_SECRET and len(API_SECRET) > 8 else f"API_SECRET: {API_SECRET}")
-print(f"ACCESS_TOKEN: {ACCESS_TOKEN[:8]}..." if ACCESS_TOKEN and len(ACCESS_TOKEN) > 8 else f"ACCESS_TOKEN: {ACCESS_TOKEN}")
+print(f"ACCESS_TOKEN: {ACCESS_TOKEN[:15]}..." if ACCESS_TOKEN and len(ACCESS_TOKEN) > 15 else f"ACCESS_TOKEN: {ACCESS_TOKEN}")
 print(f"ACCESS_TOKEN_SECRET: {ACCESS_TOKEN_SECRET[:8]}..." if ACCESS_TOKEN_SECRET and len(ACCESS_TOKEN_SECRET) > 8 else f"ACCESS_TOKEN_SECRET: {ACCESS_TOKEN_SECRET}")
 print(f"BEARER_TOKEN: {BEARER_TOKEN[:8]}..." if BEARER_TOKEN and len(BEARER_TOKEN) > 8 else f"BEARER_TOKEN: {BEARER_TOKEN}")
+
+# 重要: ACCESS_TOKENの検証
+if ACCESS_TOKEN and not ACCESS_TOKEN.startswith("195157417084189"):
+    print("🚨 警告: ACCESS_TOKENが正しくありません！")
+    print("💡 正しいACCESS_TOKENは '1951574170841890817-' で始まるはずです")
+
+if ACCESS_TOKEN_SECRET and ACCESS_TOKEN_SECRET == ACCESS_TOKEN:
+    print("🚨 警告: ACCESS_TOKENとACCESS_TOKEN_SECRETが同じ値です！")
+    print("💡 これらは異なる値である必要があります")
 
 # Tweepy クライアントの初期化（v2 API用）
 try:
