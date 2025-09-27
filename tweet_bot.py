@@ -1,5 +1,6 @@
 import tweepy 
 import os
+import ephem
 from datetime import datetime
 
 # 環境変数から認証情報を取得（クラウド環境用）
@@ -53,9 +54,53 @@ except Exception as client_error:
     print(f"❌ クライアント初期化エラー: {client_error}")
     exit(1)
 
-# 現在時刻を含む一意のツイートを作成
-current_time = datetime.now().strftime("%Y年%m月%d日 %H:%M:%S")
-tweet_text = f"こんにちは！現在時刻: {current_time} #PythonBot"
+# 日本（東京）の日の出・日没時刻を計算する関数
+def get_sun_times():
+    """東京の日の出・日没時刻を取得する"""
+    try:
+        # 東京の緯度・経度
+        tokyo = ephem.Observer()
+        tokyo.lat = '35.6762'  # 東京の緯度
+        tokyo.lon = '139.6503' # 東京の経度
+        tokyo.elevation = 0
+        
+        # 今日の日付
+        tokyo.date = datetime.now()
+        
+        # 太陽オブジェクト
+        sun = ephem.Sun()
+        
+        # 日の出・日没計算
+        sunrise = tokyo.next_rising(sun)
+        sunset = tokyo.next_setting(sun)
+        
+        # 日本時間に変換（UTC+9）
+        sunrise_jst = ephem.localtime(sunrise)
+        sunset_jst = ephem.localtime(sunset)
+        
+        return sunrise_jst.strftime("%H:%M"), sunset_jst.strftime("%H:%M")
+    
+    except Exception as e:
+        print(f"⚠️ 日の出・日没計算エラー: {e}")
+        return "06:30", "18:00"  # デフォルト値
+
+# 日の出・日没時刻を取得
+sunrise_time, sunset_time = get_sun_times()
+
+# ツイートメッセージを作成
+current_time = datetime.now()
+date_str = current_time.strftime("%Y年%m月%d日")
+day_of_week = ["月", "火", "水", "木", "金", "土", "日"][current_time.weekday()]
+
+tweet_text = f"""🌅 {date_str}({day_of_week}) の太陽情報 🌅
+
+📅 今日は{date_str}
+🌄 日の出: {sunrise_time}
+🌇 日の入: {sunset_time}
+
+今日も素敵な一日を！ ✨
+
+#日の出 #日の入り #太陽 #今日の空 #PythonBot"""
 
 # ツイート投稿
 try:
