@@ -51,3 +51,5 @@ python tweet_bot.py
 2. アプリケーション作成
 3. API Keys and Tokens から認証情報取得
 4. 環境変数として設定
+
+以上
