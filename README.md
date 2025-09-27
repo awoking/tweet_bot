@@ -1,96 +1,39 @@
-# Twitter Bot - Cloud Deployment
+# Twitter Bot
 
-このTwitter botをクラウドにデプロイする手順です。
+シンプルなTwitterボットです。
 
-## 前提条件
+## セットアップ
 
-- Docker がインストールされていること
-- Twitter API キーが取得済みであること
-- `.env` ファイルが設定済みであること
-
-## クイックスタート
-
-### ローカルでテスト
-```powershell
-# ビルド
-.\build.ps1
-
-# ローカル実行
-.\deploy.ps1 -Platform local
+1. **依存関係のインストール**
+```bash
+pip install -r requirements.txt
 ```
 
-### 本番デプロイ
-
-#### Google Cloud Platform
-```powershell
-# GCP CLIインストール後
-.\deploy-gcp.ps1 -ProjectId your-project-id
+2. **環境変数の設定**
+`.env`ファイルに以下の内容を記入してください：
+```
+TWITTER_API_KEY=your_api_key_here
+TWITTER_API_SECRET=your_api_secret_here
+TWITTER_ACCESS_TOKEN=your_access_token_here
+TWITTER_ACCESS_TOKEN_SECRET=your_access_token_secret_here
+TWITTER_BEARER_TOKEN=your_bearer_token_here
 ```
 
-#### AWS
-```powershell
-# ECRにプッシュ
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin YOUR_ECR_URI
-docker tag tweet-bot:latest YOUR_ECR_URI/tweet-bot:latest
-docker push YOUR_ECR_URI/tweet-bot:latest
+## 実行
 
-# ECSタスク定義の更新
-aws ecs register-task-definition --cli-input-json file://aws-task-definition.json
+```bash
+python tweet_bot.py
 ```
 
-#### Azure
-```powershell
-# Azure CLIインストール後
-az login
-.\deploy-azure.ps1
-```
+## ファイル構成
 
-## ファイル説明
+- `tweet_bot.py` - メインプログラム
+- `.env` - API認証情報（非公開）
+- `.gitignore` - Git除外設定
+- `requirements.txt` - 依存パッケージ一覧
 
-- `build.ps1` - Dockerイメージビルドスクリプト
-- `deploy.ps1` - 統合デプロイスクリプト
-- `Dockerfile` - Dockerイメージ設定
-- `docker-compose.yml` - ローカル実行用
-- `requirements.txt` - Python依存関係
-- `aws-task-definition.json` - AWS ECS設定
-- `deploy-gcp.ps1` - Google Cloud Run用
-- `deploy-azure.ps1` - Azure Container Instances用
+## 注意事項
 
-## 環境変数
-
-以下の環境変数を設定してください：
-
-- `TWITTER_API_KEY`
-- `TWITTER_API_SECRET`
-- `TWITTER_ACCESS_TOKEN`
-- `TWITTER_ACCESS_TOKEN_SECRET`
-- `TWITTER_BEARER_TOKEN`
-
-## スケジュール実行
-
-各クラウドプラットフォームでのスケジュール実行：
-
-### AWS
-- CloudWatch Events + ECS タスク
-
-### GCP
-- Cloud Scheduler + Cloud Run
-
-### Azure
-- Logic Apps または Azure Functions
-
-## トラブルシューティング
-
-### よくある問題
-1. **API認証エラー**: `.env`ファイルのキーを確認
-2. **重複ツイートエラー**: 時間間隔を空けるか、ツイート内容を変更
-3. **Docker build失敗**: `requirements.txt`と`tweet_bot.py`の存在確認
-
-### ログ確認
-```powershell
-# ローカル
-docker-compose logs -f
-
-# クラウド
-# 各プラットフォームのログビューワーを使用
-```
+- `.env`ファイルは公開リポジトリにはアップロードされません
+- Twitter API v2を使用しています
+- 重複ツイートエラーを避けるため、毎回異なる内容を投稿します
