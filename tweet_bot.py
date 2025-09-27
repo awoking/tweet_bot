@@ -64,9 +64,10 @@ def get_sun_times():
         tokyo.lon = '139.6503' # 東京の経度
         tokyo.elevation = 0
         
-        # 今日の日付を設定
-        now = datetime.now()
-        tokyo.date = now.strftime('%Y/%m/%d 00:00:00')
+        # 日本時間で今日の日付を取得
+        from datetime import timedelta
+        japan_now = datetime.utcnow() + timedelta(hours=9)
+        tokyo.date = japan_now.strftime('%Y/%m/%d 00:00:00')
         
         # 太陽オブジェクト
         sun = ephem.Sun()
@@ -76,8 +77,6 @@ def get_sun_times():
         sunset_utc = tokyo.next_setting(sun)
         
         # UTC+9（日本時間）に変換
-        from datetime import timedelta
-        
         sunrise_jst = sunrise_utc.datetime() + timedelta(hours=9)
         sunset_jst = sunset_utc.datetime() + timedelta(hours=9)
         
@@ -92,13 +91,21 @@ def get_sun_times():
         print(f"⚠️ 日の出・日没計算エラー: {e}")
         return "06:30", "18:00"  # デフォルト値
 
+# 日本時間を取得する関数
+def get_japan_time():
+    """日本時間（UTC+9）を取得する"""
+    from datetime import timedelta
+    utc_now = datetime.utcnow()
+    japan_time = utc_now + timedelta(hours=9)
+    return japan_time
+
 # 日の出・日没時刻を取得
 sunrise_time, sunset_time = get_sun_times()
 
-# ツイートメッセージを作成
-current_time = datetime.now()
-date_str = current_time.strftime("%Y年%m月%d日")
-day_of_week = ["月", "火", "水", "木", "金", "土", "日"][current_time.weekday()]
+# 日本時間でツイートメッセージを作成
+japan_now = get_japan_time()
+date_str = japan_now.strftime("%Y年%m月%d日")
+day_of_week = ["月", "火", "水", "木", "金", "土", "日"][japan_now.weekday()]
 
 tweet_text = f"""🌅 {date_str}({day_of_week}) の太陽情報 🌅
 
