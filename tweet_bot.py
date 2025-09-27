@@ -111,7 +111,9 @@ day_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][japan_now.weekda
 # シェルプロンプト風のメッセージ
 tweet_text = f"""$ {date_str} JST
 Sunrise : {sunrise_time}
-#hello, world!"""
+┌─────────────────┐
+│  Hello, world!  │
+└─────────────────┘"""
 
 # ツイート投稿
 try:
