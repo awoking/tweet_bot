@@ -109,9 +109,9 @@ time_str = japan_now.strftime("%H:%M:%S")
 day_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][japan_now.weekday()]
 
 # シェルプロンプト風のメッセージ
-tweet_text = f"""$ Hello,world! {date_str} {time_str} JST
-
-sunrise: {sunrise_time}"""
+tweet_text = f"""$ {date_str} JST
+Sunrise : {sunrise_time}
+#hello, world!"""
 
 # ツイート投稿
 try:
