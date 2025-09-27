@@ -22,14 +22,36 @@ if not all([API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET]):
 
 print("✅ 環境変数設定OK - Twitter Bot起動中...")
 
-# Tweepy クライアントの初期化
-client = tweepy.Client(
-    consumer_key=API_KEY,
-    consumer_secret=API_SECRET,
-    access_token=ACCESS_TOKEN,
-    access_token_secret=ACCESS_TOKEN_SECRET,
-    bearer_token=BEARER_TOKEN
-)
+# デバッグ: APIキーの最初の数文字を表示（セキュリティのため一部のみ）
+print("🔍 認証情報チェック:")
+print(f"API_KEY: {API_KEY[:8]}..." if API_KEY and len(API_KEY) > 8 else f"API_KEY: {API_KEY}")
+print(f"API_SECRET: {API_SECRET[:8]}..." if API_SECRET and len(API_SECRET) > 8 else f"API_SECRET: {API_SECRET}")
+print(f"ACCESS_TOKEN: {ACCESS_TOKEN[:8]}..." if ACCESS_TOKEN and len(ACCESS_TOKEN) > 8 else f"ACCESS_TOKEN: {ACCESS_TOKEN}")
+print(f"ACCESS_TOKEN_SECRET: {ACCESS_TOKEN_SECRET[:8]}..." if ACCESS_TOKEN_SECRET and len(ACCESS_TOKEN_SECRET) > 8 else f"ACCESS_TOKEN_SECRET: {ACCESS_TOKEN_SECRET}")
+print(f"BEARER_TOKEN: {BEARER_TOKEN[:8]}..." if BEARER_TOKEN and len(BEARER_TOKEN) > 8 else f"BEARER_TOKEN: {BEARER_TOKEN}")
+
+# Tweepy クライアントの初期化（v2 API用）
+try:
+    client = tweepy.Client(
+        bearer_token=BEARER_TOKEN,
+        consumer_key=API_KEY,
+        consumer_secret=API_SECRET,
+        access_token=ACCESS_TOKEN,
+        access_token_secret=ACCESS_TOKEN_SECRET,
+        wait_on_rate_limit=True
+    )
+    print("✅ Twitter APIクライアント初期化成功")
+    
+    # API接続テスト
+    try:
+        me = client.get_me()
+        print(f"📱 認証済みユーザー: @{me.data.username}")
+    except Exception as auth_test_error:
+        print(f"⚠️ 認証テストエラー: {auth_test_error}")
+        
+except Exception as client_error:
+    print(f"❌ クライアント初期化エラー: {client_error}")
+    exit(1)
 
 # 現在時刻を含む一意のツイートを作成
 current_time = datetime.now().strftime("%Y年%m月%d日 %H:%M:%S")
