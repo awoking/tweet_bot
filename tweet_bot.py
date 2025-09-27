@@ -102,20 +102,16 @@ def get_japan_time():
 # 日の出・日没時刻を取得
 sunrise_time, sunset_time = get_sun_times()
 
-# 日本時間でツイートメッセージを作成
+# 日本時間でシェルログ風ツイートメッセージを作成
 japan_now = get_japan_time()
-date_str = japan_now.strftime("%Y年%m月%d日")
-day_of_week = ["月", "火", "水", "木", "金", "土", "日"][japan_now.weekday()]
+date_str = japan_now.strftime("%Y-%m-%d")
+time_str = japan_now.strftime("%H:%M:%S")
+day_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][japan_now.weekday()]
 
-tweet_text = f"""🌅 {date_str}({day_of_week}) の太陽情報 🌅
+# シェルプロンプト風のメッセージ
+tweet_text = f"""$ Hello,world! {date_str} {time_str} JST
 
-📅 今日は{date_str}
-🌄 日の出: {sunrise_time}
-🌇 日の入: {sunset_time}
-
-今日も素敵な一日を！ ✨
-
-#日の出 #日の入り #太陽 #今日の空 #PythonBot"""
+sunrise: {sunrise_time}"""
 
 # ツイート投稿
 try:
