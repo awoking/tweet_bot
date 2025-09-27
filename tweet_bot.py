@@ -2,15 +2,7 @@ import tweepy
 import os
 from datetime import datetime
 
-# ローカル開発用の.envファイル読み込み（クラウドでは無視される）
-try:
-    from dotenv import load_dotenv
-    load_dotenv()  # .envファイルがあれば読み込む
-except ImportError:
-    # python-dotenvがインストールされていない場合はスキップ
-    pass
-
-# 環境変数から認証情報を取得
+# 環境変数から認証情報を取得（クラウド環境用）
 API_KEY = os.getenv("TWITTER_API_KEY")
 API_SECRET = os.getenv("TWITTER_API_SECRET")
 ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN")
@@ -19,13 +11,16 @@ BEARER_TOKEN = os.getenv("TWITTER_BEARER_TOKEN")
 
 # 認証情報の確認
 if not all([API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET]):
-    print("エラー: .envファイルにAPIキーが正しく設定されていません")
-    print("以下の環境変数を確認してください:")
-    print("- TWITTER_API_KEY")
-    print("- TWITTER_API_SECRET") 
-    print("- TWITTER_ACCESS_TOKEN")
-    print("- TWITTER_ACCESS_TOKEN_SECRET")
+    print("❌ 環境変数設定エラー")
+    print("� 設定状況:")
+    print(f"TWITTER_API_KEY: {'✅' if API_KEY else '❌'}")
+    print(f"TWITTER_API_SECRET: {'✅' if API_SECRET else '❌'}")
+    print(f"TWITTER_ACCESS_TOKEN: {'✅' if ACCESS_TOKEN else '❌'}")
+    print(f"TWITTER_ACCESS_TOKEN_SECRET: {'✅' if ACCESS_TOKEN_SECRET else '❌'}")
+    print(f"TWITTER_BEARER_TOKEN: {'✅' if BEARER_TOKEN else '❌'}")
     exit(1)
+
+print("✅ 環境変数設定OK - Twitter Bot起動中...")
 
 # Tweepy クライアントの初期化
 client = tweepy.Client(
@@ -43,8 +38,10 @@ tweet_text = f"こんにちは！現在時刻: {current_time} #PythonBot"
 # ツイート投稿
 try:
     response = client.create_tweet(text=tweet_text)
-    print("ツイートが正常に投稿されました！")
-    print(f"ツイート内容: {tweet_text}")
-    print(f"ツイートID: {response.data['id']}")
+    print("🎉 ツイート投稿成功!")
+    print(f"📝 内容: {tweet_text}")
+    print(f"🔗 ツイートID: {response.data['id']}")
 except Exception as e:
-    print(f"エラーが発生しました: {e}")
+    print(f"❌ ツイート投稿エラー: {e}")
+    if "duplicate" in str(e).lower():
+        print("💡 重複エラー: 同じ内容のツイートが既に存在します")
