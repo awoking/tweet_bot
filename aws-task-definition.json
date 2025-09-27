@@ -1,0 +1,46 @@
+{
+  "family": "twitter-bot-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "twitter-bot",
+      "image": "YOUR_ECR_REPOSITORY_URI:latest",
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/twitter-bot",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "environment": [
+        {
+          "name": "TWITTER_API_KEY",
+          "value": "YOUR_API_KEY"
+        },
+        {
+          "name": "TWITTER_API_SECRET",
+          "value": "YOUR_API_SECRET"
+        },
+        {
+          "name": "TWITTER_ACCESS_TOKEN",
+          "value": "YOUR_ACCESS_TOKEN"
+        },
+        {
+          "name": "TWITTER_ACCESS_TOKEN_SECRET",
+          "value": "YOUR_ACCESS_TOKEN_SECRET"
+        },
+        {
+          "name": "TWITTER_BEARER_TOKEN",
+          "value": "YOUR_BEARER_TOKEN"
+        }
+      ]
+    }
+  ]
+}
